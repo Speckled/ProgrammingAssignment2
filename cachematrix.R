@@ -1,15 +1,48 @@
-## Put comments here that give an overall description of what your
-## functions do
+## This two functions used togheter are capable of storing 1 cached element so 
+#it don't have to be calculated again
 
-## Write a short comment describing this function
+
+## This function works as an index in which the following function relies on
+
 
 makeCacheMatrix <- function(x = matrix()) {
-
+    m <- NULL
+    set <- function(y) {
+        x <<- y
+        m <<- NULL
+    }
+    get <- function() x
+    setinverse <- function(solve) m <<- solve
+    getinverse <- function() m
+    list(set = set, get = get,
+         setinverse = setinverse,
+         getinverse = getinverse)    
 }
 
 
-## Write a short comment describing this function
+
+
+##Verify m has allready been calculated, if so will print and end the function,
+#if not the data will be calculated and printes,
+
 
 cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+    m <- x$getinverse()
+    if(!is.null(m)) {
+        message("getting cached data")
+        return(m)
+    }
+    data <- x$get()
+    m <- solve(data)
+    x$setinverse(m)
+    print(m)  
 }
+
+
+b <- makeCacheMatrix(matrix(c(1,2,3,4),ncol=2, nrow=2))
+b$set()
+b$get()
+b$getinverse()
+b$setinverse()
+cacheSolve(b)
+
